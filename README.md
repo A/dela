@@ -5,7 +5,7 @@
 ### Installation
 
 ```
-pip install dela
+pip install --user dela
 ```
 
 ### Help
