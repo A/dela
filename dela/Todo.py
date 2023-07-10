@@ -7,6 +7,7 @@ class Todo(object):
     STATUSES_DONE = ['x', 'X']
     STATUSES_ARCHIVED = ['a', 'A']
     STATUSES_CLOSED = ['c', 'C', '-']
+    STATUSES_SOMEDAY = ['s', 'S']
     STATUSES_IN_PROGRESS = ['~']
 
     title = None
