@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "dela"
+version = "0.1.0"
+description = ""
+authors = ["'Anton Shuvalov' <anton@shuvalov.info>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.scripts]
+dela = "dela.__main__:main"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+docopt = "^0.6.2"
+blue = "^0.9.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
