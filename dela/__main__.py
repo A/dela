@@ -5,7 +5,7 @@ from docopt import docopt
 from dela.ListCommand import ListCommand
 from dela.logger import log
 
-doc = """todos
+doc = """dela
 
 CLI to list todos in markdown files, like Obsidian Vaults.
 
@@ -17,7 +17,7 @@ Usage:
 Options:
   -h --help                     Show this screen
   -v --verbose                  Enable logging
-  -a --all                      Show closed todos
+  -a --all                      Show all todos including closed ones
   -t --today                    Show only today tasks
   -d --done                     Show only done tasks
   -s --status=<symbol>          Filter by status (x, a, c, ~, ...)
