@@ -75,7 +75,7 @@ class ListCommand:
                     *Todo.STATUSES_CLOSED,
                     *Todo.STATUSES_SOMEDAY,
                 ] 
-                and (not bool(i.date) or int(i.date) < YYYYmmDD)
+                and (not bool(i.date) or int(i.date) <= YYYYmmDD)
             ]
 
         if self.config.only_someday:
@@ -95,7 +95,7 @@ class ListCommand:
             ]
 
         if self.config.only_today:
-            result = [i for i in result if bool(i.date) and int(i.date) < YYYYmmDD]
+            result = [i for i in result if bool(i.date) and int(i.date) <= YYYYmmDD]
 
         return result
 
