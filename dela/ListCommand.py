@@ -12,7 +12,7 @@ class ListCommandConfig(object):
         self.format = (
             args['--format']
             if args['--format']
-            else '\u001b[30m- \u001b[0m\u001b[01m[$status]\u001b[0m \u001b[31m$file:\u001b[0m $title \u001b[0m\u001b[34m$tags\u001b[0m'
+            else '\u001b[30m- \u001b[0m\u001b[01m[$status]\u001b[0m \u001b[31m$file:\u001b[0m $title \u001b[0m\u001b[34m$tags\u001b[0m \u001b[31m$date\u001b[0m'
         )
         self.filter_by_status = args['--status'] if args['--status'] else None
         self.show_all = True if args['--all'] else False
@@ -62,6 +62,8 @@ class ListCommand:
     def filter(self, todos):
         result = todos
 
+        YYYYmmDD = int(datetime.now().strftime('%Y%m%d'))
+
         if not self.config.show_all and not self.config.only_done and not self.config.only_someday:
             result = [
                 i
@@ -72,7 +74,8 @@ class ListCommand:
                     *Todo.STATUSES_ARCHIVED,
                     *Todo.STATUSES_CLOSED,
                     *Todo.STATUSES_SOMEDAY,
-                ]
+                ] 
+                and (not bool(i.date) or int(i.date) < YYYYmmDD)
             ]
 
         if self.config.only_someday:
@@ -92,8 +95,7 @@ class ListCommand:
             ]
 
         if self.config.only_today:
-            YYYYmmDD = datetime.now().strftime('%Y%m%d')
-            result = [i for i in result if i.date == YYYYmmDD]
+            result = [i for i in result if bool(i.date) and int(i.date) < YYYYmmDD]
 
         return result
 

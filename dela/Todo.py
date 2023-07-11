@@ -38,7 +38,7 @@ class Todo(object):
         return Todo(
             title=gd['title'],
             status=gd['status'],
-            date=gd['date'] if 'date' in gd else None,
+            date=gd['date'] if 'date' in gd and gd['date'] else '',
             tags=gd['tagline'].split(' ')
             if 'tagline' in gd and gd['tagline'] is not None
             else [],
