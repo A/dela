@@ -55,7 +55,8 @@ Supported todo examples:
     - [ ] 23330101 Future task will be hidden until the day become
 """
 
-version = pkg_resources.get_distribution("dela").version
+version = pkg_resources.get_distribution('dela').version
+
 
 def main():
     args = docopt(doc, version=version)

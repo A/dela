@@ -64,7 +64,11 @@ class ListCommand:
 
         YYYYmmDD = int(datetime.now().strftime('%Y%m%d'))
 
-        if not self.config.show_all and not self.config.only_done and not self.config.only_someday:
+        if (
+            not self.config.show_all
+            and not self.config.only_done
+            and not self.config.only_someday
+        ):
             result = [
                 i
                 for i in result
@@ -74,7 +78,7 @@ class ListCommand:
                     *Todo.STATUSES_ARCHIVED,
                     *Todo.STATUSES_CLOSED,
                     *Todo.STATUSES_SOMEDAY,
-                ] 
+                ]
                 and (not bool(i.date) or int(i.date) <= YYYYmmDD)
             ]
 
@@ -91,11 +95,15 @@ class ListCommand:
 
         if self.config.filter_by_tags:
             result = [
-                i for i in result if bool(set(i.tags) & set(self.config.filter_by_tags))
+                i
+                for i in result
+                if bool(set(i.tags) & set(self.config.filter_by_tags))
             ]
 
         if self.config.only_today:
-            result = [i for i in result if bool(i.date) and int(i.date) <= YYYYmmDD]
+            result = [
+                i for i in result if bool(i.date) and int(i.date) <= YYYYmmDD
+            ]
 
         return result
 
@@ -106,7 +114,7 @@ class ListCommand:
             result = sorted(
                 todos,
                 reverse=True,
-                key=lambda x: getattr(x, self.config.sort_by) # type: ignore
+                key=lambda x: getattr(x, self.config.sort_by),  # type: ignore
             )
 
         return result
