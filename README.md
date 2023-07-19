@@ -21,7 +21,7 @@ dela list -u -s='~,n, ,s' #prints todos with given status including upcoming one
 ### Help
 
 ```
-CLI to list todos in markdown files, like Obsidian Vaults.
+CLI to list todos from markdown files and obsidian vaults.
 
 Usage:
   dela -h | --help
@@ -34,21 +34,16 @@ Options:
   -v --verbose                  Enable logging
   --version                     Show version.
 
-  -s=<str> --statuses=<str>      Filter by status (someday, backlog, in_progress, etc) [default: ~,n, ]
+  -s=<str> --statuses=<str>     Filter by status [default: ~,n, ]
   -t=<str> --tags=<str>         Filter by tag (#work, #home, etc)
 
   --today                       Show only tasks due today or earlier
   -u --upcoming                 Show future tasks
-  -a --all                      Show all todos including closed ones
+  -a --all                      Show all todos
 
-  --sort_by=<key>               Sort by given key
+  --sort_by=<key>               Sort by given key or comma-separated keys
 
   --format=<string>             Format result with given template string.
-
-
-Template and Sorting Keys:
-
-    NOTE: In templates variable should be prefixed with the $ sign.
 
 
 Todo statuses:
@@ -57,12 +52,14 @@ Todo statuses:
     which you can overwrite.
 
 
-Upcoming Tasks
+Upcoming Tasks:
+
     If a task has a date in future, it's hidden by default. To see such tasks in the output,
     add the `--upcoming` flag.
 
 
 Sorting:
+
     By default todos are sorted by `--status` value according to the order of given statuses,
     and then by date to place todos with dates to the top of the list (due date sounds important,
     right?). You can sort todos by passing an attribute name to the  `--sort_by` flag.
@@ -73,14 +70,16 @@ Sorting:
     - status
     - tags
     - file
+    - line
 
 
 Formatting output:
+
     You can use your own template with the `--format` flag. Unicode colors are supported:
 
     For example:
 
-        dela list --format='- [$status] $file: $title'
+        dela list --format='- [$status] $file:$line $title'
 
     Next variables are supported:
 
@@ -89,4 +88,5 @@ Formatting output:
     - $status
     - $tags
     - $file
+    - $line
 ```

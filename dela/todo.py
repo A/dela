@@ -9,19 +9,18 @@ class Todo(object):
     file = None
     tags = []
     status = None
+    line = None
 
-    def __init__(self, title, status, tags, file, date):
+    def __init__(self, title, status, tags, file, date, line):
         self.title = title
         self.date = date
         self.status = status
         self.tags = tags
         self.file = file
+        self.line = line
 
     @staticmethod
-    def from_line(line, file):
-        """
-        format: - [ ] [YYYYmmDD] Todo #tag #tag
-        """
+    def from_line(line, file, lnum):
         match = match = re.search(TODO_RE, line)
 
         if not match:
@@ -37,7 +36,8 @@ class Todo(object):
             if 'tagline' in gd and gd['tagline'] is not None
             else [],
             file=file,
+            line=lnum,
         )
 
     def __repr__(self):
-        return f'title: {self.title}\ndate: {self.date}\ntags: {",".join(self.tags)}\nstatus: {self.status}\nfile: {self.file}'
+        return f'title: {self.title}\ndate: {self.date}\ntags: {",".join(self.tags)}\nstatus: {self.status}\nfile: {self.file}\nline: {self.line}'

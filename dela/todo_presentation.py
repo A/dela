@@ -1,4 +1,3 @@
-import sys
 import codecs
 from string import Template
 
