@@ -7,7 +7,11 @@ class TodoPresentation:
     def __init__(self, format) -> None:
         self.template = Template(format)
 
-    def present(self, todo):
+    def present(self, todos):
+        for todo in todos:
+            self.present_one(todo)
+
+    def present_one(self, todo):
         context = todo.__dict__
         context['tags'] = ' '.join(context['tags'])
 

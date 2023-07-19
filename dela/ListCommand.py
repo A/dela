@@ -1,9 +1,8 @@
-import operator
-from datetime import datetime
 from dela.TodoPresentation import TodoPresentation
+from dela.TodoRepo import TodoRepo
+from dela.comparators import SortByAttribute, SortByStatus
+from dela.filters import ExcludeUpcomingFilter, StatusFilter, TagFilter, TodayFilter
 from dela.logger import log
-from dela.FileReader import FileReader
-from dela.Todo import Todo
 
 
 class ListCommandConfig(object):
@@ -14,13 +13,12 @@ class ListCommandConfig(object):
             if args['--format']
             else '\u001b[30m- \u001b[0m\u001b[01m[$status]\u001b[0m \u001b[31m$file:\u001b[0m $title \u001b[0m\u001b[34m$tags\u001b[0m \u001b[31m$date\u001b[0m'
         )
-        self.filter_by_status = args['--status'] if args['--status'] else None
-        self.show_all = True if args['--all'] else False
+        self.all = True if args['--all'] else False
+        self.statuses = args['--statuses'].replace('=', '').split(',') if args['--statuses'] else []
+        self.tags = args['--tags'].replace('=', '').split(',') if args['--tags'] else []
+        self.today = True if args['--today'] else False
+        self.upcoming = True if args['--upcoming'] else False
         self.sort_by = args['--sort_by'] if args['--sort_by'] else None
-        self.only_today = True if args['--today'] else False
-        self.only_done = True if args['--done'] else False
-        self.only_someday = True if args['--someday'] else False
-        self.filter_by_tags = args['--tag'] if args['--tag'] else None
 
     def __str__(self):
         return str(self.__class__) + ': ' + str(self.__dict__)
@@ -28,93 +26,34 @@ class ListCommandConfig(object):
 
 class ListCommand:
     def __init__(self, args) -> None:
+        self.args = args;
         self.config = ListCommandConfig(args)
 
     def run(self):
         log.info(f'Execute list command with config: {self.config}')
 
-        files = FileReader.get_files(self.config.glob)
-        log.debug(f'Match files: {files}')
+        query = TodoRepo(self.config.glob).all()
 
-        result = []
-        for file_path in files:
-            log.debug(f'Parsing file: {file_path}')
+        if not self.config.all:
+            query.filter(StatusFilter(self.config.statuses).run)
 
-            local = []
-            for line in FileReader.read_file(file_path):
-                todo = Todo.from_line(line, file_path)
-                if todo:
-                    local.append(todo)
+        query.filter(TagFilter(self.config.tags).run)
 
-            if len(local):
-                log.info(f'Parsed file: {file_path}')
-                log.info(f'Found {len(local)} todo(s)')
-                log.info(f'Todos: {local}')
-            result += local
+        if self.config.today:
+            query.filter(TodayFilter().run)
 
-        result = self.filter(result)
-        result = self.sort(result)
+        if not self.config.upcoming and not self.config.all:
+            query.filter(ExcludeUpcomingFilter().run)
 
-        presentation = TodoPresentation(self.config.format)
-        for i in result:
-            presentation.present(i)
+        if not self.config.all:
+            query.sort(SortByStatus(self.config.statuses).run)
+            query.sort(SortByAttribute("date").run)
 
-    def filter(self, todos):
-        result = todos
-
-        YYYYmmDD = int(datetime.now().strftime('%Y%m%d'))
-
-        if (
-            not self.config.show_all
-            and not self.config.only_done
-            and not self.config.only_someday
-        ):
-            result = [
-                i
-                for i in result
-                if i.status
-                not in [
-                    *Todo.STATUSES_DONE,
-                    *Todo.STATUSES_ARCHIVED,
-                    *Todo.STATUSES_CLOSED,
-                    *Todo.STATUSES_SOMEDAY,
-                ]
-                and (not bool(i.date) or int(i.date) <= YYYYmmDD)
-            ]
-
-        if self.config.only_someday:
-            result = [i for i in result if i.status in Todo.STATUSES_SOMEDAY]
-
-        if self.config.only_done:
-            result = [i for i in result if i.status not in Todo.STATUSES_DONE]
-
-        if self.config.filter_by_status is not None:
-            result = [
-                i for i in result if i.status == self.config.filter_by_status
-            ]
-
-        if self.config.filter_by_tags:
-            result = [
-                i
-                for i in result
-                if bool(set(i.tags) & set(self.config.filter_by_tags))
-            ]
-
-        if self.config.only_today:
-            result = [
-                i for i in result if bool(i.date) and int(i.date) <= YYYYmmDD
-            ]
-
-        return result
-
-    def sort(self, todos):
-        result = todos
 
         if self.config.sort_by:
-            result = sorted(
-                todos,
-                reverse=True,
-                key=lambda x: getattr(x, self.config.sort_by),  # type: ignore
-            )
+            query.sort(SortByAttribute(self.config.sort_by).run)
 
-        return result
+        result = query.exec()
+
+        presentation = TodoPresentation(self.config.format)
+        presentation.present(result)

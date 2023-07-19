@@ -4,12 +4,6 @@ TODO_RE = '^\s*-\s+\[(?P<status>.{1})\]\s+(?:(?P<date>\d{8})\s+)?(?P<title>.*?)(
 
 
 class Todo(object):
-    STATUSES_DONE = ['x', 'X']
-    STATUSES_ARCHIVED = ['a', 'A']
-    STATUSES_CLOSED = ['c', 'C', '-']
-    STATUSES_SOMEDAY = ['s', 'S']
-    STATUSES_IN_PROGRESS = ['~']
-
     title = None
     date = None
     file = None
@@ -37,7 +31,7 @@ class Todo(object):
 
         return Todo(
             title=gd['title'],
-            status=gd['status'],
+            status=gd['status'].lower(),
             date=gd['date'] if 'date' in gd and gd['date'] else '',
             tags=gd['tagline'].split(' ')
             if 'tagline' in gd and gd['tagline'] is not None
