@@ -15,10 +15,11 @@ dela = "dela.__main__:main"
 [tool.poetry.dependencies]
 python = "^3.8"
 docopt = "^0.6.2"
-blue = "^0.9.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+blue = "^0.9.1"
 
 [build-system]
 requires = ["poetry-core"]
