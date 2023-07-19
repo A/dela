@@ -23,6 +23,10 @@ jobs:
       - name: install deps
         run: poetry install
 
+
+      - name: test
+        run: poetry run pytest --cache-clear
+
       - name: publish
         run: |
           poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN}}
