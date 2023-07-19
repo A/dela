@@ -1,7 +1,6 @@
 #! /bin/python
 import pkg_resources
 from docopt import docopt
-from dela.TagsCommand import TagsCommand
 from dela.ListCommand import ListCommand
 from dela.logger import log
 
