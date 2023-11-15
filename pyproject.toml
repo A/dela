@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dela"
-version = "0.2.2"
+version = "0.3.0"
 description = ""
 authors = ["'Anton Shuvalov' <anton@shuvalov.info>"]
 license = "MIT"
@@ -15,6 +15,7 @@ dela = "dela.__main__:main"
 [tool.poetry.dependencies]
 python = "^3.8"
 docopt = "^0.6.2"
+python-frontmatter = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
