@@ -8,6 +8,16 @@
 pip install --user dela
 ```
 
+### Features
+
+- Getting all todos against a markdown files collection
+- Dates support
+- Tags support
+- Flexible filters
+- Flexible Sorting
+- Frontmatter support
+
+
 ### Examples
 
 ```bash
@@ -70,7 +80,6 @@ Sorting:
     - status
     - tags
     - file
-    - line
 
 
 Formatting output:
@@ -79,7 +88,7 @@ Formatting output:
 
     For example:
 
-        dela list --format='- [$status] $file:$line $title'
+        dela list --format='- [$status] $file: $title'
 
     Next variables are supported:
 
@@ -89,4 +98,23 @@ Formatting output:
     - $tags
     - $file
     - $line
+
+Frontmatter Support:
+
+    You can use frontmatter to override file-level todo states, it can be useful in the next cases:
+        - Automatically consider all todos in `todos_done.md` as done
+        - To set `date` as `today` automatically if a todo is placed in `today.md`
+        - To automatically set per-file tags
+
+    To achieve this, you can add a frontmatter in a manner like below:
+
+    ```
+    ---
+    dela:
+        date: today # it's a specific keyword. Standard dates in a YYYYmmdd format also supported
+        status: 'x' # override status for all todos in the file
+        tags: # append per-file tags
+            - per_file_tag
+    ---
+    ```
 ```

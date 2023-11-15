@@ -20,9 +20,10 @@ class TodoQuery:
 
     def _read_fs(self):
         result = []
-        for [path, lnum, line] in self.reader.get_lines(self.glob):
-            todo = Todo.from_line(line, path, lnum)
+        for line in self.reader.get_lines(self.glob):
+            todo = Todo.from_line(line.content, line.file, line.number)
             if todo:
+                todo.merge(line.file_meta)
                 result.append(todo)
 
         return result
